@@ -1,18 +1,20 @@
 import 'dotenv/config'
 import express from 'express'
 import { routes } from './routes/index.routes.js'
+import { rootErrorMiddleware } from './middleware/error.middleware.js'
+import cookieParser from 'cookie-parser'
 
 const app = express()
 
 app.use(express.json())
-app.use(routes)
+app.use(cookieParser())
 
-app.use((error, req, res, _next) => {
-	const status = error.status || 500
-	const message = error.message || 'Server internal error'
-	res.status(status).json({ status: 'error', message })
-})
+app.use(routes) //initialize routes
 
+//? Root Error Middleware
+app.use(rootErrorMiddleware)
+
+//start server
 app.listen(process.env.PORT, () => {
 	console.log(`server is running on port ${process.env.PORT}`)
 })

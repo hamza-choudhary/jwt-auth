@@ -9,6 +9,7 @@ export const validateSignup = () => {
 	return checkSchema({
 		email: {
 			in: ['body'],
+			trim: true,
 			isEmail: {
 				errorMessage: MESSAGES.INVALID_EMAIL,
 			},
@@ -28,16 +29,17 @@ export const validateSignup = () => {
 				errorMessage: MESSAGES.INVALID_PASSWORD,
 			},
 		},
-		role: {
-			in: ['body'],
-			customSanitizer: {
-				options: (value) => value.toUpperCase(),
-			},
-			isIn: {
-				options: [[USER_ROLES.CASHIER, USER_ROLES.CUSTOMER]],
-				errorMessage: MESSAGES.INVALID_USER_ROLE,
-			},
-		},
+		// role: {
+		// 	in: ['body'],
+		// 	trim: true,
+		// 	customSanitizer: {
+		// 		options: (value) => value.toUpperCase(),
+		// 	},
+		// 	isIn: {
+		// 		options: [[USER_ROLES.CASHIER, USER_ROLES.CUSTOMER]],
+		// 		errorMessage: MESSAGES.INVALID_USER_ROLE,
+		// 	},
+		// },
 	})
 }
 

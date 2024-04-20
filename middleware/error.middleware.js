@@ -1,7 +1,7 @@
 import { validationResult } from 'express-validator'
-import { MESSAGES } from '../../constants/messages.js'
-import { STATUS } from '../../constants/status.js'
-import { createError } from '../../helpers/helper.js'
+import { MESSAGES } from '../constants/messages.js'
+import { STATUS } from '../constants/status.js'
+import { createError } from '../helpers/helper.js'
 
 /**
  * @param {import('express').Request} req - The Express request object.
@@ -26,4 +26,10 @@ export function handleValidationErrors(req, res, next) {
 		return next(error)
 	}
 	next()
+}
+
+export function rootErrorMiddleware(error, req, res, _next) {
+	const status = error.status || 500
+	const message = error.message || 'Server internal error'
+	res.status(status).json({ status: 'error', message })
 }

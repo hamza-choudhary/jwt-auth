@@ -13,18 +13,26 @@ import { MESSAGES } from '../constants/messages.js'
  */
 export async function postSignup(req, res, next) {
 	try {
-		const { email, password, role } = req.body
+		const { email, password } = req.body
+		const role = req?.user?.role ? USER_ROLES.CASHIER : USER_ROLES.CUSTOMER
 
 		const hashedPassword = await bcrypt.hash(password, 10)
+
 		const result = await prisma.user.create({
 			data: { email, password: hashedPassword, role },
 			select: { id: true, email: true, role: true },
 		})
+
 		const accessToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET, {
 			expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
 		})
 		const refreshToken = jwt.sign(result, process.env.REFRESH_TOKEN_SECRET, {
 			expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+		})
+
+		await prisma.user.update({
+			where: { id: result.id },
+			data: { refreshToken },
 		})
 
 		res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: true, secure: true })
