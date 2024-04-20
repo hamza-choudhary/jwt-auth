@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
-import prisma from '../config/db.config'
-import { USER_ROLES } from '../constants/global-constant'
-import { createError } from '../helpers/helper'
+import prisma from '../config/db.config.js'
+import { ACCESS_TOKEN, USER_ROLES } from '../constants/global-constant.js'
+import { MESSAGES } from '../constants/messages.js'
+// import { createError } from '../helpers/helper'
+// import { STATUS } from '../constants/status'
 
 /**
  * @param {import('express').Request} req - The Express request object.
@@ -12,9 +14,6 @@ import { createError } from '../helpers/helper'
 export async function postSignup(req, res, next) {
 	try {
 		const { email, password, role } = req.body
-		//validation logic should be added for email and password
-		const userRole = USER_ROLES[role.lowerCase()]
-		if (!userRole) throw createError(500, 'user role not found')
 
 		const hashedPassword = await bcrypt.hash(password, 10)
 		const result = await prisma.user.create({
@@ -28,16 +27,16 @@ export async function postSignup(req, res, next) {
 			expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
 		})
 
-		res.cookie(name, val, options)
-		res
-			.status(201)
-			.json({
-				accessToken,
-				refreshToken,
-				data: result,
-				message: 'User created successfully',
-			})
+		res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: true, secure: true })
+		res.status(201).json({
+			refreshToken,
+			data: result,
+			message: MESSAGES.SUCCESS.AUTH.SIGNUP,
+		})
 	} catch (error) {
+		error.message =
+			MESSAGES.ERROR.AUTH.SIGNUP +
+			(error.message.includes('Unique') ? MESSAGES.EMAIL_EXIST : error.message)
 		next(error)
 	}
 }

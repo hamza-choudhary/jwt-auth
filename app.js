@@ -4,6 +4,7 @@ import { routes } from './routes/index.routes.js'
 
 const app = express()
 
+app.use(express.json())
 app.use(routes)
 
 app.use((error, req, res, _next) => {
