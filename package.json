@@ -1,15 +1,15 @@
 {
-	"name": "02_auth",
+	"name": "onestophardware_backend",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"description": "This package contains the business logic of one stop hardwares",
+	"main": "server.js",
 	"type": "module",
 	"scripts": {
-		"start": "nodemon app.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"start": "node server.js",
+		"dev": "nodemon server.js"
 	},
-	"author": "",
-	"license": "ISC",
+	"author": "Mohsin shoaib",
+	"license": "MIT",
 	"dependencies": {
 		"@prisma/client": "^5.12.1",
 		"bcrypt": "^5.1.1",
@@ -20,14 +20,15 @@
 		"jsonwebtoken": "^9.0.2"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.0.0",
+		"@eslint/js": "^9.1.1",
 		"@types/bcrypt": "^5.0.2",
 		"@types/cookie-parser": "^1.4.7",
 		"@types/express": "^4.17.21",
 		"@types/jsonwebtoken": "^9.0.6",
 		"@types/node": "^20.12.7",
-		"eslint": "^9.0.0",
+		"eslint": "^9.1.0",
 		"globals": "^15.0.0",
+		"prettier": "^3.2.5",
 		"prisma": "^5.12.1"
 	}
 }

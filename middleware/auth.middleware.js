@@ -1,8 +1,9 @@
 import jwt from 'jsonwebtoken'
+import { ACCESS_TOKEN } from '../constants/global-constant.js'
 import { MESSAGES } from '../constants/messages.js'
 import { STATUS } from '../constants/status.js'
+import { asyncHandler } from '../helpers/asyncHandler.js'
 import { createError } from '../helpers/helper.js'
-import { ACCESS_TOKEN } from '../constants/global-constant.js'
 
 /**
  * @param {import('express').Request} req - The Express request object.
@@ -10,50 +11,51 @@ import { ACCESS_TOKEN } from '../constants/global-constant.js'
  * @param {import('express').NextFunction} next - The next middleware function.
  */
 
-export function authenticateAndAuthorize(requiredRole) {
-	return (req, res, next) => {
-		const access_token = req.cookies[ACCESS_TOKEN]
+export const authentication = asyncHandler(async (req, res, next) => {
+  const access_token = req.cookies[ACCESS_TOKEN]
 
-		if (!access_token) {
-			const error = createError(
-				STATUS.BAD_REQUEST,
-				MESSAGES.ACCESS_TOKEN_MISSING
-			)
-			return next(error)
-		}
+  if (!access_token) {
+    const error = createError(STATUS.BAD_REQUEST, MESSAGES.ACCESS_TOKEN_MISSING)
+    return next(error)
+  }
 
-		// Verify the token
-		jwt.verify(
-			access_token,
-			process.env.ACCESS_TOKEN_SECRET,
-			(err, decoded) => {
-				if (err) {
-					const error = createError(
-						STATUS.UNAUTHENTICATED,
-						MESSAGES.INVALID_ACCESS_TOKEN
-					)
-					return next(error)
-				}
-				// Check if token is expired
-				if (Date.now() >= decoded.exp * 1000) {
-					const error = createError(
-						STATUS.UNAUTHENTICATED,
-						MESSAGES.ACCESS_TOKEN_EXPIRED
-					)
-					return next(error)
-				}
+  const { id, email, role } = jwt.verify(
+    access_token,
+    process.env.ACCESS_TOKEN_SECRET,
+  )
+  req.user = { id, email, role }
+  next()
+})
 
-				// AUTHORIZATION
-				if (decoded.role !== requiredRole) {
-					const error = createError(STATUS.FORBIDDEN, MESSAGES.FORBIDDEN)
-					return next(error)
-				}
+export function authorization(requiredRole) {
+  return (req, res, next) => {
+    const role = req.user.role
 
-				// set user in req
-				req.user = decoded
-			}
-		)
+    if (role !== requiredRole) {
+      const error = createError(STATUS.FORBIDDEN, MESSAGES.FORBIDDEN)
+      return next(error)
+    }
 
-		next()
-	}
+    next()
+  }
 }
+
+export const verifyRefresh = asyncHandler(async (req, res, next) => {
+  const refreshToken = req.body.refreshToken
+
+  if (!refreshToken) {
+    const error = createError(
+      STATUS.BAD_REQUEST,
+      MESSAGES.REFRESH_TOKEN_MISSING,
+    )
+    return next(error)
+  }
+
+  const { id, email, role } = jwt.verify(
+    refreshToken,
+    process.env.REFRESH_TOKEN_SECRET,
+  )
+
+  req.user = { id, email, role }
+  next()
+})

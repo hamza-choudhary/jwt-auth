@@ -1,1 +1,3 @@
 TRUNCATE TABLE "User";
+
+SELECT * FROM "User";
