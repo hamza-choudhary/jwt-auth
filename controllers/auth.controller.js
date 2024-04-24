@@ -43,6 +43,8 @@ export const postSignup = asyncHandler(async (req, res, next) => {
 })
 
 export const postLogout = (req, res, next) => {
+  // FIXME: delete refresh token from db as well 
+  // and we have to make logout route authenticated then we will get users user.id
   res.clearCookie(ACCESS_TOKEN)
   res.status(STATUS.OK).json({ message: MESSAGES.SUCCESS.AUTH.LOGOUT })
 }
