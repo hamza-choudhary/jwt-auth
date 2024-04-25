@@ -12,13 +12,13 @@ import { asyncHandler } from '../helpers/asyncHandler.js'
  * @param {import('express').NextFunction} next - The next middleware function.
  */
 export const postSignup = asyncHandler(async (req, res, next) => {
-	const { email, password } = req.body
+	const { firstName, lastName, email, password } = req.body
 	const role = req?.user?.role ? USER_ROLES.CASHIER : USER_ROLES.CUSTOMER
 
 	const hashedPassword = await bcrypt.hash(password, 10)
 
 	const result = await prisma.user.create({
-		data: { email, password: hashedPassword, role },
+		data: { firstName, lastName, email, password: hashedPassword, role },
 		select: { id: true, email: true, role: true },
 	})
 
