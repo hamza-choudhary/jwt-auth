@@ -6,6 +6,20 @@ import { createError } from '../../helpers/helper.js'
 
 export const validateSignup = () => {
   return checkSchema({
+    firstName: {
+      in: ['body'],
+      isLength: {
+        options: { min: 3 },
+        errorMessage: MESSAGES.INVALID_FIRST_NAME,
+      },
+    },
+    lastName: {
+      in: ['body'],
+      isLength: {
+        options: { min: 3 },
+        errorMessage: MESSAGES.INVALID_LAST_NAME,
+      },
+    },
     email: {
       in: ['body'],
       trim: true,
