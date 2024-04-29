@@ -5,47 +5,49 @@ import { STATUS } from '../../constants/status.js'
 import { createError } from '../../helpers/helper.js'
 
 export const validateSignup = () => {
-  return checkSchema({
-    firstName: {
-      in: ['body'],
-      isLength: {
-        options: { min: 3 },
-        errorMessage: MESSAGES.INVALID_FIRST_NAME,
-      },
-    },
-    lastName: {
-      in: ['body'],
-      isLength: {
-        options: { min: 3 },
-        errorMessage: MESSAGES.INVALID_LAST_NAME,
-      },
-    },
-    email: {
-      in: ['body'],
-      trim: true,
-      isEmail: {
-        errorMessage: MESSAGES.INVALID_EMAIL,
-      },
-      custom: {
-        options: async (email) => {
-          if (await emailExists(email)) {
-            const error = createError(STATUS.BAD_REQUEST, MESSAGES.EMAIL_EXIST)
-            throw error
-          }
-        },
-      },
-    },
-    password: {
-      in: ['body'],
-      isLength: {
-        options: { min: 3 },
-        errorMessage: MESSAGES.INVALID_PASSWORD,
-      },
-    },
-  })
+	return checkSchema({
+		firstName: {
+			in: ['body'],
+			trim: true,
+			isLength: {
+				options: { min: 2 },
+				errorMessage: MESSAGES.INVALID_FIRST_NAME,
+			},
+		},
+		lastName: {
+			in: ['body'],
+			trim: true,
+			isLength: {
+        options: { min: 2 },
+				errorMessage: MESSAGES.INVALID_LAST_NAME,
+			},
+		},
+		email: {
+			in: ['body'],
+			trim: true,
+			isEmail: {
+				errorMessage: MESSAGES.INVALID_EMAIL,
+			},
+			custom: {
+				options: async (email) => {
+					if (await emailExists(email)) {
+						const error = createError(STATUS.BAD_REQUEST, MESSAGES.EMAIL_EXIST)
+						throw error
+					}
+				},
+			},
+		},
+		password: {
+			in: ['body'],
+			isLength: {
+				options: { min: 3 },
+				errorMessage: MESSAGES.INVALID_PASSWORD,
+			},
+		},
+	})
 }
 
 async function emailExists(email) {
-  const user = await prisma.user.findFirst({ where: { email } })
-  return !!user
+	const user = await prisma.user.findFirst({ where: { email } })
+	return !!user
 }

@@ -39,6 +39,6 @@ export function rootErrorMiddleware(error, req, res, _next) {
     message = MESSAGES.INVALID_TOKEN
     status = STATUS.UNAUTHENTICATED
   }
-
-  res.status(status).json({ status: 'error', message, error })
+  console.log(error)
+  res.status(status).json({ status: 'error', message })
 }
