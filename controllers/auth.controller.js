@@ -34,7 +34,7 @@ export const postSignup = asyncHandler(async (req, res, next) => {
 		data: { refreshToken },
 	})
 
-	res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: false})
+	res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: false })
 	//FIXME: in production add this line { httpOnly: true, secure: true }
 	res.status(201).json({
 		refreshToken,
@@ -61,8 +61,8 @@ export const postRefreshToken = asyncHandler(async (req, res, next) => {
 	})
 
 	res.cookie(ACCESS_TOKEN, accessToken, {
-		httpOnly: true,
-		secure: true,
+		// httpOnly: true,
+		// secure: true,
 		overwrite: true,
 	})
 
