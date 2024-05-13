@@ -54,19 +54,26 @@ export const postLogin = asyncHandler(async (req, res, next) => {
 		throw new Error(MESSAGES.WRONG_PASSWORD)
 	}
 
-	const accessToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET, {
+	const user = { id: result.id, email: result.email, role: result.role }
+
+	const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
 		expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
 	})
-	const refreshToken = jwt.sign(result, process.env.REFRESH_TOKEN_SECRET, {
+	const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
 		expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+	})
+
+	await prisma.user.update({
+		where: { id: result.id },
+		data: { refreshToken },
 	})
 
 	res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: false })
 	//FIXME: in production add this line { httpOnly: true, secure: true }
 	res.status(201).json({
 		refreshToken,
-		data: result,
-		message: MESSAGES.SUCCESS.AUTH.SIGNUP,
+		data: user,
+		message: MESSAGES.SUCCESS.AUTH.LOGIN,
 	})
 })
 
