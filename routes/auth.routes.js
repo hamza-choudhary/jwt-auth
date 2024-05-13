@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { USER_ROLES } from '../constants/global-constant.js'
 import { ROUTES } from '../constants/routes.js'
 import {
+	postLogin,
 	postLogout,
 	postRefreshToken,
 	postSignup,
@@ -12,6 +13,7 @@ import {
 	verifyRefresh,
 } from '../middleware/auth.middleware.js'
 import { handleValidationErrors } from '../middleware/error.middleware.js'
+import { validateLogin } from '../middleware/validators/validateLogin.js'
 import { validateSignup } from '../middleware/validators/validateSignup.js'
 
 const router = Router()
@@ -29,6 +31,10 @@ router
 		handleValidationErrors,
 		postSignup
 	)
+
+router
+	.route(ROUTES.AUTH.LOGIN)
+	.post(validateLogin(), handleValidationErrors, postLogin)
 
 router.route(ROUTES.AUTH.LOGOUT).post(authentication, postLogout)
 

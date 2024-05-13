@@ -43,6 +43,33 @@ export const postSignup = asyncHandler(async (req, res, next) => {
 	})
 })
 
+export const postLogin = asyncHandler(async (req, res, next) => {
+	const { email, password } = req.body
+
+	const result = await prisma.user.findUnique({ where: { email } })
+
+	const match = await bcrypt.compare(password, result.password)
+
+	if (!match) {
+		throw new Error(MESSAGES.WRONG_PASSWORD)
+	}
+
+	const accessToken = jwt.sign(result, process.env.ACCESS_TOKEN_SECRET, {
+		expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
+	})
+	const refreshToken = jwt.sign(result, process.env.REFRESH_TOKEN_SECRET, {
+		expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
+	})
+
+	res.cookie(ACCESS_TOKEN, accessToken, { httpOnly: false })
+	//FIXME: in production add this line { httpOnly: true, secure: true }
+	res.status(201).json({
+		refreshToken,
+		data: result,
+		message: MESSAGES.SUCCESS.AUTH.SIGNUP,
+	})
+})
+
 export const postLogout = asyncHandler(async (req, res, next) => {
 	await prisma.user.update({
 		where: { id: req.user.id },

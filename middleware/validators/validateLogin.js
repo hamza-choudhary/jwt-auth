@@ -3,24 +3,8 @@ import { MESSAGES } from '../../constants/messages.js'
 import { STATUS } from '../../constants/status.js'
 import { createError, emailExists } from '../../helpers/helper.js'
 
-export const validateSignup = () => {
+export const validateLogin = () => {
 	return checkSchema({
-		firstName: {
-			in: ['body'],
-			trim: true,
-			isLength: {
-				options: { min: 2 },
-				errorMessage: MESSAGES.INVALID_FIRST_NAME,
-			},
-		},
-		lastName: {
-			in: ['body'],
-			trim: true,
-			isLength: {
-				options: { min: 2 },
-				errorMessage: MESSAGES.INVALID_LAST_NAME,
-			},
-		},
 		email: {
 			in: ['body'],
 			trim: true,
@@ -29,8 +13,11 @@ export const validateSignup = () => {
 			},
 			custom: {
 				options: async (email) => {
-					if (await emailExists(email)) {
-						const error = createError(STATUS.BAD_REQUEST, MESSAGES.EMAIL_EXIST)
+					if (!(await emailExists(email))) {
+						const error = createError(
+							STATUS.BAD_REQUEST,
+							MESSAGES.USER_NOT_FOUND
+						)
 						throw error
 					}
 				},
@@ -42,6 +29,7 @@ export const validateSignup = () => {
 				options: { min: 3 },
 				errorMessage: MESSAGES.INVALID_PASSWORD,
 			},
+			customSanitizer: { options: (value) => String(value) },
 		},
 	})
 }
