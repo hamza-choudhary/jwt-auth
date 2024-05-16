@@ -1,7 +1,6 @@
 import { checkSchema } from 'express-validator'
-import { MESSAGES } from '../../constants/messages.js'
-import { STATUS } from '../../constants/status.js'
-import { createError, emailExists } from '../../helpers/helper.js'
+import { MESSAGES, STATUS } from '../../constants/index.js'
+import { createError, emailExists } from '../../helpers/index.js'
 
 export const validateSignup = () => {
 	return checkSchema({

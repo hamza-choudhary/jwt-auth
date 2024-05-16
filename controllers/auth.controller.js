@@ -1,16 +1,14 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import prisma from '../config/db.config.js'
-import { ACCESS_TOKEN, USER_ROLES } from '../constants/global-constant.js'
-import { MESSAGES } from '../constants/messages.js'
-import { STATUS } from '../constants/status.js'
-import { asyncHandler } from '../helpers/asyncHandler.js'
+import {
+	ACCESS_TOKEN,
+	MESSAGES,
+	STATUS,
+	USER_ROLES,
+} from '../constants/index.js'
+import { asyncHandler } from '../helpers/index.js'
 
-/**
- * @param {import('express').Request} req - The Express request object.
- * @param {import('express').Response} res - The Express response object.
- * @param {import('express').NextFunction} next - The next middleware function.
- */
 export const postSignup = asyncHandler(async (req, res, next) => {
 	const { firstName, lastName, email, password } = req.body
 	const role = req?.user?.role ? USER_ROLES.CASHIER : USER_ROLES.CUSTOMER

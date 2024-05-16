@@ -1,7 +1,7 @@
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import { ROUTES } from './constants/routes.js'
+import { ROUTES } from './constants/index.js'
 import { rootErrorMiddleware } from './middleware/error.middleware.js'
 import { authRoutes } from './routes/auth.routes.js'
 

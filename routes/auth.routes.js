@@ -1,6 +1,5 @@
 import { Router } from 'express'
-import { USER_ROLES } from '../constants/global-constant.js'
-import { ROUTES } from '../constants/routes.js'
+import { ROUTES, USER_ROLES } from '../constants/index.js'
 import {
 	postLogin,
 	postLogout,
@@ -10,11 +9,11 @@ import {
 import {
 	authentication,
 	authorization,
+	handleValidationErrors,
+	validateLogin,
+	validateSignup,
 	verifyRefresh,
-} from '../middleware/auth.middleware.js'
-import { handleValidationErrors } from '../middleware/error.middleware.js'
-import { validateLogin } from '../middleware/validators/validateLogin.js'
-import { validateSignup } from '../middleware/validators/validateSignup.js'
+} from '../middleware/index.js'
 
 const router = Router()
 
