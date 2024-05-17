@@ -49,17 +49,21 @@ export const ERRORS = {
 		message: 'ERROR: access token is expired',
 		code: 'AUTH_ACCESS_TOKEN_EXPIRED',
 	},
+	ACCESS_TOKEN_INVALID: {
+		message: 'ERROR: access token is invalid',
+		code: 'AUTH_ACCESS_TOKEN_INVALID',
+	},
 	REFRESH_TOKEN_MISSING: {
 		message: 'ERROR: refreshToken field is missing',
 		code: 'AUTH_REFRESH_TOKEN_MISSING',
 	},
-	INVALID_TOKEN: {
-		message: 'INVALID: token',
-		code: 'AUTH_INVALID_TOKEN',
+	REFRESH_TOKEN_EXPIRED: {
+		message: 'ERROR: refresh token is expired',
+		code: 'AUTH_REFRESH_TOKEN_EXPIRED',
 	},
-	TOKEN_EXPIRED: {
-		message: 'FORBIDDEN: token is expired',
-		code: 'AUTH_TOKEN_EXPIRED',
+	REFRESH_TOKEN_INVALID: {
+		message: 'ERROR: refresh token is invalid',
+		code: 'AUTH_REFRESH_TOKEN_INVALID',
 	},
 	FORBIDDEN: {
 		message: 'FORBIDDEN: you are not Authorized for this resource',

@@ -7,4 +7,8 @@ export const ROUTES = {
 		REFRESH_TOKEN: '/refresh/token',
 		ROOT: '/api/v1/auth',
 	},
+	TEST: {
+		ROOT: '/api/v1',
+		TEST: '/test'
+	}
 }
